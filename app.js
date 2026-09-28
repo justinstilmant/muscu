@@ -95,9 +95,12 @@ function bestE1(exId) {
 
 /* ============ UI de base ============ */
 const dlg = $('#dlg');
-function sheet(html) { dlg.innerHTML = '<div class="sheet">' + html + '</div>'; if (!dlg.open) dlg.showModal(); }
-function closeSheet() { if (dlg.open) dlg.close(); }
+let animStop = null;
+function stopAnim() { if (animStop) { animStop(); animStop = null; } }
+function sheet(html) { stopAnim(); dlg.innerHTML = '<div class="sheet">' + html + '</div>'; if (!dlg.open) dlg.showModal(); }
+function closeSheet() { stopAnim(); if (dlg.open) dlg.close(); }
 dlg.addEventListener('click', e => { if (e.target === dlg) closeSheet(); });
+dlg.addEventListener('close', stopAnim);
 let toastT;
 function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.hidden = false;
@@ -232,7 +235,8 @@ function listHTML(q, m, mode, sel) {
     h += '<h2>' + esc(mu) + ' <small>' + g.length + '</small></h2>';
     for (const x of g) {
       const on = sel && sel.has(x.id);
-      h += '<button class="row" data-act="' + (mode === 'pick' ? 'pk-t' : 'exdetail') + '" data-id="' + x.id + '"><span><b>' + esc(x.name) + (x.base ? '' : '<span class="tag">perso</span>') + '</b><small>' + esc(x.equip) + '</small></span>' + (mode === 'pick' ? '<span class="tick">' + (on ? '✓' : '') + '</span>' : '') + '</button>';
+      const th = (window.ANIM ? ANIM.thumb(ANIM.spec(x)) : '');
+      h += '<button class="row" data-act="' + (mode === 'pick' ? 'pk-t' : 'exdetail') + '" data-id="' + x.id + '"><span class="row-main">' + (th ? '<span class="exthumb">' + th + '</span>' : '') + '<span><b>' + esc(x.name) + (x.base ? '' : '<span class="tag">perso</span>') + '</b><small>' + esc(x.equip) + '</small></span></span>' + (mode === 'pick' ? '<span class="tick">' + (on ? '✓' : '') + '</span>' : '') + '</button>';
     }
   }
   return h;
@@ -257,8 +261,11 @@ function vExercices(v) {
 }
 function exDetail(id) {
   const x = getEx(id), best = bestE1(id);
+  const spec = window.ANIM ? ANIM.spec(x) : null;
   const sessions = S.history.filter(h => h.entries.some(e => e.exId === id)).slice(-5).reverse();
-  let h = '<h2>' + esc(x.name) + '</h2><div class="kv"><span>Groupe musculaire</span><b>' + esc(x.muscle) + '</b></div><div class="kv"><span>Matériel</span><b>' + esc(x.equip) + '</b></div>';
+  let h = '<h2>' + esc(x.name) + '</h2>';
+  h += spec ? '<div class="animwrap" id="exanim"></div>' : '<p class="note">Pas encore d\'animation pour cet exercice.</p>';
+  h += '<div class="kv"><span>Groupe musculaire</span><b>' + esc(x.muscle) + '</b></div><div class="kv"><span>Matériel</span><b>' + esc(x.equip) + '</b></div>';
   if (x.notes) h += '<p class="note">' + esc(x.notes) + '</p>';
   h += best ? '<div class="kv"><span>Meilleur 1RM estimé</span><b>' + fmt(best) + ' kg</b></div>' : '<p class="note">Pas encore d\'historique pour cet exercice.</p>';
   if (sessions.length) {
@@ -267,6 +274,7 @@ function exDetail(id) {
   }
   h += '<div class="sheetbar">' + (x.base ? '<button class="btn" data-act="close">Fermer</button><span></span>' : '<button class="btn danger" data-act="ex-del" data-id="' + id + '">Supprimer</button><button class="btn pri" data-act="ex-edit" data-id="' + id + '">Modifier</button>') + '</div>';
   sheet(h);
+  if (spec) animStop = ANIM.mount($('#exanim'), spec);
 }
 function exForm(id, after) {
   const x = id ? getEx(id) : { name: '', muscle: MUSCLES[0], equip: EQUIP[0], notes: '' };

@@ -1,5 +1,5 @@
-const V = 'muscu-v1';
-const ASSETS = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const V = 'muscu-v2';
+const ASSETS = ['./', './index.html', './style.css', './app.js', './anim.js', './manifest.webmanifest', './logo.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

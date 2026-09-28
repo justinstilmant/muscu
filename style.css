@@ -18,7 +18,8 @@ button{cursor:pointer;border:0;background:none;padding:0}
 
 #app{max-width:640px;margin:0 auto;min-height:100dvh;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 #top{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 18px 10px;background:var(--bg);border-bottom:1px solid var(--line)}
-#top .brand{font-weight:800;letter-spacing:-.02em}
+#top .brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.02em;font-size:17px}
+#top .brand img{width:26px;height:26px;border-radius:7px;display:block}
 #pill{background:var(--acc);color:var(--acc-ink);border-radius:99px;padding:6px 12px;font-weight:700;font-size:14px}
 main{padding:8px 18px 24px}
 
@@ -33,7 +34,9 @@ small{color:var(--mute);font-size:13px}
 
 .blk{margin-top:6px}
 .row{display:flex;width:100%;justify-content:space-between;align-items:center;gap:12px;text-align:left;padding:14px 0;border-bottom:1px solid var(--line)}
-.row span:first-child{display:flex;flex-direction:column}
+.row > span:first-child:not(.row-main){display:flex;flex-direction:column}
+.row > .row-main{display:flex;flex-direction:row;align-items:center;min-width:0}
+.row > .row-main > span:last-child{display:flex;flex-direction:column;min-width:0}
 .row .go{color:var(--acc);font-weight:700}
 .row .tick{color:var(--acc);font-weight:800}
 
@@ -125,6 +128,32 @@ dialog::backdrop{background:rgba(10,12,16,.55)}
 .set-row input,.set-row select{width:110px;padding:8px 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--surf);text-align:center}
 
 #toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-weight:600;font-size:14px;z-index:20;max-width:90%}
+
+/* Figures animées (anim.js) */
+.fig{width:100%;height:auto;display:block}
+.g-b{stroke:var(--ink);stroke-width:6;stroke-linecap:round}
+.g-far{opacity:.35}
+.g-hi{stroke:var(--acc)}
+.g-head{fill:var(--ink)}
+.g-hi ~ .g-head,.g-head.g-hi{fill:var(--acc)}
+.g-foot{stroke-width:6}
+.g-env{stroke:var(--line);stroke-width:3;stroke-linecap:round;fill:none}
+.g-envf{fill:var(--line)}
+.g-thick{stroke-width:6}
+.g-plate{fill:var(--acc);stroke:var(--acc);opacity:.9}
+.g-hub{fill:var(--mute)}
+.g-cable{stroke:var(--mute);stroke-width:2;stroke-dasharray:1 4;stroke-linecap:round}
+.g-rope{fill:none;stroke:var(--acc);stroke-width:3;opacity:.55}
+.g-fl{stroke:var(--line);stroke-width:2}
+
+.exthumb{flex:none;width:52px;height:52px;border-radius:10px;background:var(--surf);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-right:12px}
+.exthumb .fig{width:60px}
+
+.animwrap{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:4px}
+.animwrap .fig{max-width:260px;margin:0 auto;display:block}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pair figure{margin:0}
+.pair figcaption{text-align:center;font-size:12px;color:var(--mute);margin-top:2px}
 
 @media (prefers-reduced-motion:no-preference){
   .sheet{animation:up .18s ease-out}
