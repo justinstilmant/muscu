@@ -1,21 +1,16 @@
-const CACHE_NAME = 'muscu-v1';
-const ASSETS = [
-    './', 
-    './index.html', 
-    './style.css', 
-    './app.js', 
-    './anim.js', 
-    './manifest.webmanifest'
-];
-
+const V = 'muscu-v1';
+const ASSETS = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
-  );
+  e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
-
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== V).map(x => caches.delete(x)))).then(() => self.clients.claim()));
+});
+// Réseau d'abord (pour recevoir les mises à jour), cache en secours (hors-ligne)
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
   e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
+    fetch(e.request).then(r => { const c = r.clone(); caches.open(V).then(x => x.put(e.request, c)); return r; })
+      .catch(() => caches.match(e.request).then(m => m || caches.match('./index.html')))
   );
 });

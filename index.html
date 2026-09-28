@@ -1,18 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App de Musculation</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Muscu</title>
+<meta name="theme-color" content="#ECEBE6">
+<meta name="description" content="Carnet d'entraînement de musculation : exercices, programmes et suivi.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Muscu">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>App de Musculation</h1>
-    <div id="app">
-        <p>Prêt pour l'entraînement !</p>
-    </div>
-    <script src="anim.js"></script>
-    <script src="app.js"></script>
+<div id="app">
+  <header id="top">
+    <span class="brand">Muscu</span>
+    <button id="pill" data-act="tab" data-tab="seance" hidden></button>
+  </header>
+  <main id="view"></main>
+</div>
+
+<div id="restbar" hidden>
+  <div><span class="lbl">Repos</span><br><b id="restleft">0:00</b></div>
+  <div>
+    <button data-act="rest-15" aria-label="Retirer 15 secondes">−15 s</button>
+    <button data-act="rest+15" aria-label="Ajouter 15 secondes">+15 s</button>
+    <button data-act="restskip">Passer</button>
+  </div>
+</div>
+
+<nav id="tabs" aria-label="Navigation principale"><div class="in">
+  <button data-act="tab" data-tab="seance">Séance</button>
+  <button data-act="tab" data-tab="programmes">Programmes</button>
+  <button data-act="tab" data-tab="exercices">Exercices</button>
+  <button data-act="tab" data-tab="suivi">Suivi</button>
+  <button data-act="tab" data-tab="reglages">Réglages</button>
+</div></nav>
+
+<dialog id="dlg" aria-label="Fenêtre"></dialog>
+<div id="toast" role="status" hidden></div>
+<input type="file" id="importfile" accept="application/json,.json" hidden>
+
+<script src="app.js"></script>
 </body>
 </html>
